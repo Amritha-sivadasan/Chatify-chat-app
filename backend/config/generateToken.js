@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 
 const getnerateTocken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn :'30d'});
+  console.log("id", id);
+  return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "30d" });
 };
 
-module.exports=getnerateTocken
+module.exports = getnerateTocken;

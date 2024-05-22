@@ -14,12 +14,14 @@ const registerUser = expressAsyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("User already exist");
   }
-  const newUser = {
+
+  const newUser = new User({
     name,
     email,
     password,
     picture,
-  };
+  });
+
   await newUser.save();
 
   if (newUser) {
@@ -34,18 +36,34 @@ const registerUser = expressAsyncHandler(async (req, res) => {
 });
 
 const authUser = expressAsyncHandler(async (req, res) => {
+  console.log(req.body);
   const { email, password } = req.body;
   const exitUser = await User.findOne({ email });
-      if(exitUser){
-         res.json({
-          _id: exitUser._id,
+  console.log("exist user", exitUser);
+  if (exitUser && (await exitUser.matchPassword(password))) {
+    console.log("password match");
+
+    res.json({
+      _id: exitUser._id,
       name: exitUser.name,
       email: exitUser.email,
       picture: exitUser.picture,
-      token: getnerateTocken(newUser._id),
-         })
-      }
-  
+      token: getnerateTocken(exitUser._id),
+    });
+  }
 });
 
-module.exports = { registerUser, authUser };
+const allUsers = expressAsyncHandler(async (req, res, next) => {
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],
+      }
+    : {};
+  const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+  res.send(users)
+});
+
+module.exports = { registerUser, authUser, allUsers };

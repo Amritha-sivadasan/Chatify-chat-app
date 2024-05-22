@@ -3,13 +3,12 @@
 .App {
   min-height: 100vh;
   display: flex;
-}
-.chakra-ui-light {
-  min-height: 100vh;
-  display: flex;
   background-image: url("https://img.freepik.com/free-vector/dialogue-chat-clouds-speech-bubble-icon-from-lines-triangles-particle-style-design-low-poly-technology-devices-people-communication-concept-blue-background_587448-472.jpg");
   background-size: cover;
   background-position: center;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
+}
+body {
+  background-position: center;
 }
