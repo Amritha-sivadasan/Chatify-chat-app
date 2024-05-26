@@ -47,6 +47,7 @@ const accessChat = asyncHandler(async (req, res) => {
 
 const fetchChats = asyncHandler(async (req, res) => {
   try {
+    console.log("inside the fetchuser");
     Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
       .populate("users", "password")
       .populate("groupAdmin", "password")
@@ -57,6 +58,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           path: "latestMessage.sender",
           select: "name picture email",
         });
+        console.log(results.users);
         res.status(200).send(results);
       });
   } catch (error) {

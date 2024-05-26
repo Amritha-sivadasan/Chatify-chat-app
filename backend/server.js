@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   res.send("Api is running");
 });
 app.use("/api/user", userRouter);
-app.use('api/chat',chatRoutes)
+app.use('/api/chat',chatRoutes)
 app.use(notFound);
 app.use(errorHandler);
 

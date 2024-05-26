@@ -15,6 +15,7 @@ import {
   MenuList,
   Radio,
   RadioGroup,
+  Spinner,
   Stack,
   Text,
   Tooltip,
@@ -27,16 +28,19 @@ import { ChatState } from "../../context/ChatProvide";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ChatLoading from "../ChatLoading";
+import UserListItem from "../UserAvatar/UserListItem";
 
 export default function SideDrawer() {
   const [search, setSearch] = useState("");
-  const [searchResult, setSearchReslut] = useState("");
+  const [searchResult, setSearchReslut] = useState([]);
   const [loading, setLoading] = useState("");
   const [loadingChat, setLoadingChat] = useState("");
-  const { user } = ChatState();
+
   const navigate = useNavigate();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [placement, setPlacement] = useState("left");
+  const { user, setSelectChat, chats, setChats, selectedChat } = ChatState();
 
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
@@ -62,6 +66,7 @@ export default function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
+      console.log("search", search);
       const { data } = await axios.get(`/api/user?search=${search}`, config);
       setLoading(false);
       setSearchReslut(data);
@@ -74,6 +79,33 @@ export default function SideDrawer() {
         isClosable: true,
       });
       setLoading(false);
+    }
+  };
+  const accessChat = (userId) => {
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = axios.post("/api/chat", { userId }, config);
+      if (chats.find((c) => c._id == data._id)) {
+        setChats([data, ...chats]);
+      }
+      setSelectChat(data);
+      setLoadingChat(false);
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "plase Enter something in search",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "top-left",
+      });
     }
   };
 
@@ -149,7 +181,20 @@ export default function SideDrawer() {
               />
               <Button onClick={handleSearch}>Go</Button>
             </Box>
-            {loading?(<ChatLoading/>):<span>dsdf</span>}
+            {loading ? (
+              <ChatLoading />
+            ) : (
+              <span>
+                {searchResult?.map((user) => (
+                  <UserListItem
+                    key={user._id}
+                    user={user}
+                    handleFunction={() => accessChat(user._id)}
+                  />
+                ))}
+              </span>
+            )}
+            {loadingChat && <Spinner ml={"auto"} display={"flex"} />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

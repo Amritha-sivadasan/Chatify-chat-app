@@ -1,19 +1,26 @@
-const jst = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const User = require("../model/userModel");
 const asynchandler = require("express-async-handler");
 
-const protect = asynchandler(async (req, res) => {
+const protect = asynchandler(async (req, res, next) => {
+  console.log("hbfjsjsjjfs");
   let token;
+
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
+     
       const decode = jwt.verify(token, process.env.JWT_SECRET);
-      req.User = await User.findById(decode.id).select("password");
+
+      req.user = await User.findById(decode.id).select("-password");
+  
+
       next();
     } catch (error) {
+      console.log(error.message);
       throw new Error("Not authorized token failed");
     }
   }
@@ -23,4 +30,4 @@ const protect = asynchandler(async (req, res) => {
   }
 });
 
-module.exports=protect
+module.exports = protect;
