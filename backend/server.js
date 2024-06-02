@@ -1,14 +1,15 @@
 const express = require("express");
-const chats = require("./data/data");
+
 const dotenv = require("dotenv");
 const cors = require("cors");
-const connnecDB = require("./config/db");
+const connnetDB = require("./config/db");
 const userRouter = require("./routes/userRoute");
-const chatRoutes =require('./routes/chatRoutes')
-const { notFound, errorHandler } =require('./middlewares/errorMiddleware')
+const chatRoutes = require("./routes/chatRoutes");
+const messageRoutes = require("./routes/messgeRoutes");
+const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
 dotenv.config();
-connnecDB();
+connnetDB();
 const app = express();
 app.use(express.json());
 
@@ -16,10 +17,41 @@ app.get("/", (req, res) => {
   res.send("Api is running");
 });
 app.use("/api/user", userRouter);
-app.use('/api/chat',chatRoutes)
+app.use("/api/chat", chatRoutes);
+app.use("/api/message", messageRoutes);
 app.use(notFound);
 app.use(errorHandler);
-
-app.listen(process.env.PORT, () => {
+app.use(cors());
+const server = app.listen(process.env.PORT, () => {
   console.log("server is Running");
+});
+const io = require("socket.io")(server, {
+  cors: {
+    origin: "http://localhost:5173",
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+
+io.on("connection", (socket) => {
+  console.log("connected to socket.io");
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
+  });
+
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("user join room " + room);
+  });
+
+  socket.on("new message", (newMessageRecieved) => {
+    var chat = newMessageRecieved.chat;
+    if (!chat.users) return console.log("chat. user in not define");
+
+    chat.users.forEach((user) => {
+      if (user._id == newMessageRecieved.sender._id) return;
+      socket.in(user._id).emit("message recieved ", newMessageRecieved);
+    });
+  });
 });

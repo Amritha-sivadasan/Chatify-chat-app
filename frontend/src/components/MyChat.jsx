@@ -5,8 +5,9 @@ import { AddIcon } from "@chakra-ui/icons";
 import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import { getSender } from "../config/chatLogics";
+import GroupChatModal from "./miscellaneous/GroupChatModal";
 
-export default function MyChat() {
+export default function MyChat({ fetchAgain, setFetchAgain }) {
   const [loggedUser, setLoggedUser] = useState();
   const { user, setSelectChat, selectedChat, chats, setChats } = ChatState();
 
@@ -21,7 +22,7 @@ export default function MyChat() {
         },
       };
       const { data } = await axios.get("/api/chat", config);
-      console.log(data);
+
       setChats(data);
     } catch (error) {
       toast({
@@ -38,7 +39,7 @@ export default function MyChat() {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChat();
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <Box
@@ -63,14 +64,16 @@ export default function MyChat() {
         textColor={"black"}
       >
         MY Chats
-        <Button
-          display={"flex"}
-          fontSize={{ base: "17px", md: "10px", lg: "17px" }}
-          rightIcon={<AddIcon />}
-        >
-          {" "}
-          New Group chat
-        </Button>
+        <GroupChatModal>
+          <Button
+            display={"flex"}
+            fontSize={{ base: "17px", md: "10px", lg: "17px" }}
+            rightIcon={<AddIcon />}
+          >
+            {" "}
+            New Group chat
+          </Button>
+        </GroupChatModal>
       </Box>
       <Box
         display={"flex"}
@@ -86,7 +89,7 @@ export default function MyChat() {
           <Stack overflowY={"scroll"}>
             {chats.map((chat) => (
               <Box
-                onClick={() => selectedChat(chat)}
+                onClick={() => setSelectChat(chat)}
                 cursor={"pointer"}
                 bg={selectedChat === chat ? "#38B2AC" : "E8E8E8"}
                 color={selectedChat === chat ? "white" : "black"}
@@ -95,7 +98,11 @@ export default function MyChat() {
                 borderRadius={"lg"}
                 key={chat._id}
               >
-                <Text>{!chat.isGroupChat?(getSender(loggedUser,chat.users)):(chat.chatName)}</Text>
+                <Text>
+                  {!chat.isGroupChat
+                    ? getSender(loggedUser, chat.users)
+                    : chat.chatName}
+                </Text>
               </Box>
             ))}
           </Stack>

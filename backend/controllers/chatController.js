@@ -16,14 +16,16 @@ const accessChat = asyncHandler(async (req, res) => {
       { users: { $elemMatch: { $eq: userId } } },
     ],
   })
-    .populate("users", "password")
+    .populate("users", "-password")
     .populate("latestMessage");
 
   isChat = await User.populate(isChat, {
     path: "latestMessage.sender",
     select: "name picture email",
   });
+ 
   if (isChat.length > 0) {
+    console.log("kfskjo");
     res.send(isChat[0]);
   } else {
     var chatData = new Chat({
@@ -47,10 +49,11 @@ const accessChat = asyncHandler(async (req, res) => {
 
 const fetchChats = asyncHandler(async (req, res) => {
   try {
-    console.log("inside the fetchuser");
-    Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
-      .populate("users", "password")
-      .populate("groupAdmin", "password")
+    Chat.find({
+      users: { $elemMatch: { $eq: req.user._id } },
+    })
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password")
       .populate("latestMessage")
       .sort({ updatedAt: -1 })
       .then(async (results) => {
@@ -58,7 +61,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           path: "latestMessage.sender",
           select: "name picture email",
         });
-        console.log(results.users);
+
         res.status(200).send(results);
       });
   } catch (error) {
@@ -68,6 +71,7 @@ const fetchChats = asyncHandler(async (req, res) => {
 });
 
 const createGroupChat = asyncHandler(async (req, res) => {
+  console.log('jsfhskfhksfsfksfkskf');
   if (!req.body.users || !req.body.name) {
     return res.status(400).send({ message: "Please fill all the fields" });
   }
@@ -87,8 +91,8 @@ const createGroupChat = asyncHandler(async (req, res) => {
     });
 
     const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
-      .populate("users", "password")
-      .populate("groupAdmin", "password");
+      .populate("users", "-password")
+      .populate("groupAdmin", "-password");
   } catch (error) {
     res.status(400);
     throw new Error(error.message);
@@ -102,8 +106,8 @@ const renameGroup = asyncHandler(async (req, res) => {
     { chatName },
     { new: true }
   )
-    .populate("users", "password")
-    .populate("groupAdmin", "password");
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
 
   if (!updatedChat) {
     res.status(400);
@@ -120,8 +124,8 @@ const addTogroup = asyncHandler(async (req, res) => {
     { $push: { users: userId } },
     { new: true }
   )
-    .populate("users", "password")
-    .populate("groupAdmin", "password");
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
 
   if (!added) {
     res.status(400);
@@ -138,8 +142,8 @@ const removeFromGroup = asyncHandler(async (req, res) => {
     { $pull: { users: userId } },
     { new: true }
   )
-    .populate("users", "password")
-    .populate("groupAdmin", "password");
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
 
   if (!removed) {
     res.status(400);

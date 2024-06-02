@@ -66,7 +66,7 @@ export default function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      console.log("search", search);
+
       const { data } = await axios.get(`/api/user?search=${search}`, config);
       setLoading(false);
       setSearchReslut(data);
@@ -81,7 +81,7 @@ export default function SideDrawer() {
       setLoading(false);
     }
   };
-  const accessChat = (userId) => {
+  const accessChat = async (userId) => {
     try {
       setLoadingChat(true);
       const config = {
@@ -90,7 +90,8 @@ export default function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = axios.post("/api/chat", { userId }, config);
+      const { data } = await axios.post("/api/chat", { userId }, config);
+
       if (chats.find((c) => c._id == data._id)) {
         setChats([data, ...chats]);
       }
