@@ -29,7 +29,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [loading, setLoading] = useState(false);
   const [socketConnected, setSocketConnected] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const { user, selectedChat, setSelectChat } = ChatState();
+  const { user, selectedChat, setSelectChat, notification, setNotification } =
+    ChatState();
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
@@ -88,7 +89,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           config
         );
         socket.emit("new message", data);
-        console.log(data);
+
         setMessages([...messages, data]);
       } catch (error) {
         toast({
@@ -138,6 +139,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageRecieved.chat._id
       ) {
+        if (!notification.includes(newMessageRecieved)) {
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
       } else {
         setMessages([...messages, newMessageRecieved]);
       }
