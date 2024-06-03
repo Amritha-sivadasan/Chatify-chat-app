@@ -73,8 +73,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           { content: newMessage, chatId: selectedChat._id },
           config
         );
+        socket.emit("new message", data);
         console.log(data);
-
         setMessages([...messages, data]);
       } catch (error) {
         toast({
@@ -98,8 +98,20 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
-    socket.on("connection", () => setSocketConnected(true));
+    socket.on("connect", () => setSocketConnected(true));
   }, []);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newMessageRecieved._id
+      ) {
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
+  });
   return (
     <>
       {selectedChat ? (

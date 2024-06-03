@@ -46,12 +46,23 @@ io.on("connection", (socket) => {
   });
 
   socket.on("new message", (newMessageRecieved) => {
+    if (!newMessageRecieved || !newMessageRecieved.chat) {
+      socket.emit("error", "Invalid message format");
+      return;
+    }
     var chat = newMessageRecieved.chat;
-    if (!chat.users) return console.log("chat. user in not define");
-
+    if (!chat.users) {
+      console.log("Chat users are not defined");
+      return;
+    }
     chat.users.forEach((user) => {
       if (user._id == newMessageRecieved.sender._id) return;
-      socket.in(user._id).emit("message recieved ", newMessageRecieved);
+      socket.in(user._id).emit("message recieved", newMessageRecieved);
+    });
+
+    socket.on("error", (err) => {
+      console.error("Socket error:", err);
+      // Handle the error as needed
     });
   });
 });
