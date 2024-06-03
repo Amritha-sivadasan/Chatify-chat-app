@@ -44,8 +44,13 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("user join room " + room);
   });
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
   socket.on("new message", (newMessageRecieved) => {
+    if (newMessageRecieved) {
+      console.log("new messages", newMessageRecieved);
+    }
     if (!newMessageRecieved || !newMessageRecieved.chat) {
       socket.emit("error", "Invalid message format");
       return;
@@ -62,7 +67,11 @@ io.on("connection", (socket) => {
 
     socket.on("error", (err) => {
       console.error("Socket error:", err);
-      // Handle the error as needed
     });
+  });
+
+  socket.off("setup", () => {
+    console.log("user disconnected");
+    socket.leave(userData._id);
   });
 });
