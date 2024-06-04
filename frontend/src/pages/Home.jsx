@@ -14,13 +14,12 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [user,setUser]=useState()
   const navigate = useNavigate();
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    setUser(userInfo);
+
     if (userInfo) {
-      navigate("/chats");
+      navigate("/chat");
     }
   }, [navigate]);
   return (

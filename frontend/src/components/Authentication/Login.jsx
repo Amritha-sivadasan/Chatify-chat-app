@@ -8,7 +8,7 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 export default function Login() {
@@ -18,6 +18,13 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const Navigate = useNavigate();
+  useEffect(() => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    if (userInfo) {
+      Navigate("/chat");
+    }
+  }, [Navigate]);
 
   const handleClick = () => {
     setShow(!show);

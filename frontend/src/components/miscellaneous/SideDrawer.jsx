@@ -23,7 +23,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { BellIcon, ChevronDownIcon, SearchIcon } from "@chakra-ui/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChatState } from "../../context/ChatProvide";
 import ProfileModal from "./ProfileModal";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,7 @@ import axios from "axios";
 import ChatLoading from "../ChatLoading";
 import UserListItem from "../UserAvatar/UserListItem";
 import { getSender } from "../../config/chatLogics";
-import NotificationBadge, { Effect } from 'react-notification-badge';
+import NotificationBadge, { Effect } from "react-notification-badge";
 
 export default function SideDrawer() {
   const [search, setSearch] = useState("");
@@ -47,7 +47,6 @@ export default function SideDrawer() {
     setSelectChat,
     chats,
     setChats,
-    selectedChat,
     notification,
     setNotification,
   } = ChatState();
@@ -150,7 +149,10 @@ export default function SideDrawer() {
         <div>
           <Menu>
             <MenuButton padding={1}>
-              <NotificationBadge count={notification.length} effect={Effect.SCALE} />
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize={"2xl"} m={1} />
             </MenuButton>
             <MenuList>
