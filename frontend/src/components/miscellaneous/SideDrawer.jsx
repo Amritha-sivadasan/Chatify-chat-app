@@ -125,10 +125,13 @@ export default function SideDrawer() {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        bg="white"
+        backgroundImage="url('https://cdn.pixabay.com/photo/2015/06/20/07/24/color-815552_640.png')"
         w="100%"
         p="5px 10px"
         borderWidth="5px"
+        backgroundSize="cover"
+        backgroundPosition="center"
+        backgroundRepeat="no-repeat"
       >
         <Tooltip label="Search users to chat" hasArrow placement="bottom-end">
           <Button
@@ -143,7 +146,7 @@ export default function SideDrawer() {
             </Text>
           </Button>
         </Tooltip>
-        <Text fontSize="2xl" fontFamily="-moz-initial">
+        <Text fontSize="2xl" fontFamily="Roboto Slab, serif" color={"white"}>
           Chatify
         </Text>
         <div>

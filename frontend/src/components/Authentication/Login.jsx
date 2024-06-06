@@ -11,20 +11,24 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ChatState } from "../../context/ChatProvide";
 export default function Login() {
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const { setUser } = ChatState();
   const toast = useToast();
   const Navigate = useNavigate();
-  useEffect(() => {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-    if (userInfo) {
-      Navigate("/chat");
-    }
-  }, [Navigate]);
+  // useEffect(() => {
+  //   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  //   console.log("userInfo", userInfo);
+  //   if (userInfo) {
+  //     setUser(userInfo);
+  //     Navigate("/chat");
+  //   }
+  // }, []);
 
   const handleClick = () => {
     setShow(!show);
@@ -60,7 +64,7 @@ export default function Login() {
         title: "Account created.",
         description: "We've created your account for you.",
         status: "success",
-        duration: 5000,
+        duration: 1000,
         isClosable: true,
       });
       localStorage.setItem("userInfo", JSON.stringify(res.data));
@@ -71,7 +75,7 @@ export default function Login() {
         title: "Error",
         description: error.message,
         status: "warning",
-        duration: 5000,
+        duration: 1000,
         isClosable: true,
       });
       setLoading(false);

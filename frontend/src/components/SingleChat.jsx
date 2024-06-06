@@ -21,6 +21,8 @@ import { io } from "socket.io-client";
 import Lottie from "react-lottie";
 import animationData from "../Animation/typing.json";
 
+import { TypeAnimation } from "react-type-animation";
+
 const ENDPOINT = "http://localhost:4000";
 var socket, selectedChatCompare;
 
@@ -178,8 +180,8 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
                 {selectedChat.chatName.toUpperCase()}
                 <UpdateGroupChatModal
                   fetchAgain={fetchAgain}
-                  setFetchAgain={setFetchAgain}
                   fetchMessage={fetchMessage}
+                  setFetchAgain={setFetchAgain}
                 />
               </>
             )}
@@ -190,12 +192,27 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             flexDir={"column"}
             justifyContent={"flex-end"}
             padding={3}
-            bg="#E8E8E8"
+            bg="black"
             w={"100%"}
             height={"100%"}
             borderRadius={"lg"}
             overflowY={"hidden"}
+            position="relative"
           >
+            <video
+              type="video/mp4"
+              autoPlay
+              loop
+              muted
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover", // Ensure the video covers the entire Box
+                position: "absolute",
+                top: 0,
+                left: 0,
+              }}
+            />
             {loading ? (
               <Spinner
                 size={"xl"}
@@ -247,7 +264,23 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             fontFamily={"-moz-initial"}
             color={"black"}
           >
-            Click on a user to Chatting
+            <TypeAnimation
+              sequence={[
+                "Click To Start a chat",
+                1000,
+                "Every chat is a new adventure waiting to unfold.",
+                1000,
+                "In the garden of life, friends are the most beautiful flowers.",
+                1000,
+                "Friends are the laughter in our hearts and the warmth in our souls.",
+                1000,
+              ]}
+              wrapper="span"
+              speed={50}
+              style={{ fontSize: "2em", display: "inline-block" }}
+              repeat={Infinity}
+            />
+            "Click To Start a chat"
           </Text>
         </Box>
       )}
