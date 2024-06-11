@@ -1,6 +1,7 @@
 import { ChatState } from "../context/ChatProvide";
 import {
   Box,
+  Button,
   FormControl,
   IconButton,
   Input,
@@ -45,6 +46,10 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+
+  useEffect(() => {
+    setNewMessage("");
+  }, [selectedChat]);
 
   const fetchMessage = async () => {
     if (!selectedChat) return;
@@ -104,6 +109,36 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
       }
     }
   };
+
+  const handleSend = async () => {
+    socket.emit("stop typing", selectedChat._id);
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      setNewMessage("");
+      const { data } = await axios.post(
+        "/api/message",
+        { content: newMessage, chatId: selectedChat._id },
+        config
+      );
+      socket.emit("new message", data);
+
+      setMessages([...messages, data]);
+    } catch (error) {
+      toast({
+        title: "Error occur in sending messages",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "top-left",
+      });
+    }
+  };
+
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
     if (!socketConnected) return;
@@ -159,11 +194,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             pb={3}
             px={2}
             w={"100%"}
-            fontFamily={"-moz-initial"}
+            fontFamily={"Roboto Slab, serif"}
             display={"flex"}
             justifyContent={{ base: "space-between" }}
             alignItems={"center"}
-            color={"black"}
+            color={"white"}
           >
             <IconButton
               display={{ base: "flex", md: "none" }}
@@ -192,27 +227,13 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             flexDir={"column"}
             justifyContent={"flex-end"}
             padding={3}
-            bg="black"
+            backgroundImage={`url("https://t3.ftcdn.net/jpg/03/27/51/56/360_F_327515607_Hcps04aaEc7Ki43d1XZPxwcv0ZaIaorh.jpg")`}
             w={"100%"}
             height={"100%"}
             borderRadius={"lg"}
             overflowY={"hidden"}
             position="relative"
           >
-            <video
-              type="video/mp4"
-              autoPlay
-              loop
-              muted
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover", // Ensure the video covers the entire Box
-                position: "absolute",
-                top: 0,
-                left: 0,
-              }}
-            />
             {loading ? (
               <Spinner
                 size={"xl"}
@@ -240,13 +261,32 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
               ) : (
                 <></>
               )}
-              <Input
-                variant={"filled"}
-                bg={"#E0E0E0"}
-                placeholder="Eneter a message"
-                onChange={typingHandler}
-                value={newMessage}
-              />
+              <Box
+                bg={"black"}
+                display={"flex"}
+                justifyContent={"space-between"}
+              >
+                <Input
+                  variant={"filled"}
+                  placeholder="Eneter a message"
+                  onChange={typingHandler}
+                  value={newMessage}
+                  backgroundColor={"#ffff"}
+                />
+                <Button
+                  colorScheme="teal"
+                  size="md"
+                  onClick={handleSend}
+                  backgroundColor="teal.500"
+                  color="white"
+                  _hover={{ backgroundColor: "teal.600" }}
+                  _active={{ backgroundColor: "teal.700" }}
+                  borderRadius="md"
+                  px={4}
+                >
+                  Send
+                </Button>
+              </Box>
             </FormControl>
           </Box>
         </>
@@ -261,13 +301,11 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
           <Text
             fontSize={"3xl"}
             pb={3}
-            fontFamily={"-moz-initial"}
-            color={"black"}
+            fontFamily={"Roboto Slab, serif"}
+            color={"white"}
           >
             <TypeAnimation
               sequence={[
-                "Click To Start a chat",
-                1000,
                 "Every chat is a new adventure waiting to unfold.",
                 1000,
                 "In the garden of life, friends are the most beautiful flowers.",

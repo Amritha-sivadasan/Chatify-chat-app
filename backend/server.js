@@ -6,6 +6,7 @@ const connnetDB = require("./config/db");
 const userRouter = require("./routes/userRoute");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messgeRoutes");
+const path = require("path");
 const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
 
 dotenv.config();
@@ -13,9 +14,20 @@ connnetDB();
 const app = express();
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Api is running");
-});
+//---------------Diployment--------------//
+const ___dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(___dirname1, "/frontend/dist")));
+  app.get("*", (req, res) => {
+    res.sendFile();
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("Api is running");
+  });
+}
+//---------------Diployment--------------//
+
 app.use("/api/user", userRouter);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);

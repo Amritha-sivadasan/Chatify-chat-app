@@ -65,7 +65,7 @@ const allUsers = expressAsyncHandler(async (req, res, next) => {
 
   const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
 
-  res.send(users);
+  res.json(users);
 });
 
 module.exports = { registerUser, authUser, allUsers };

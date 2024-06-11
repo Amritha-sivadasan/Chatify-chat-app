@@ -109,14 +109,15 @@ export default function GroupChatModal({ children }) {
     if (selectedUsers.includes(userToAdd)) {
       toast({
         title: "user is already Added",
-
         status: "warning",
         duration: 5000,
         isClosable: true,
         position: "top-left",
       });
+      return;
     }
     setSelectedUsers([...selectedUsers, userToAdd]);
+
   };
   const handleDelete = (delUser) => {
     setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));

@@ -31,7 +31,7 @@ export default function ProfileModal({ user, children }) {
           _hover={{ border: "none" }}
         />
       )}
-      <Modal size={"lg"} isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal size={"sm"} isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent h={"410px"}>
           <ModalHeader>{user.name}</ModalHeader>
@@ -49,8 +49,8 @@ export default function ProfileModal({ user, children }) {
               alt={user.name}
             />
             <Text
-              fontSize={{ base: "28px", md: "30px" }}
-              fontFamily={"-moz-initial"}
+              fontSize={{ base: "15px", md: "20px" }}
+              fontFamily={"Inter, sans-serif"}
             >
               Email: {user.email}
             </Text>

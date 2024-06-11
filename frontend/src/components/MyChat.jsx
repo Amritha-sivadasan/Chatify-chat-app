@@ -91,9 +91,9 @@ export default function MyChat({ fetchAgain, setFetchAgain }) {
           <Button
             display="flex"
             alignItems="center"
-            fontSize={{ base: "13px", md: "14px", lg: "15px" }} // Adjusted font sizes
-            colorScheme="teal" // Changed color scheme to teal for a more attractive appearance
-            _hover={{ color: "white", bg: "teal.500" }} // Hover effect with color change
+            fontSize={{ base: "13px", md: "14px", lg: "15px" }}
+            colorScheme="teal"
+            _hover={{ color: "white", bg: "teal.500" }}
             rightIcon={<AddIcon />}
           >
             New Group chat
@@ -104,7 +104,7 @@ export default function MyChat({ fetchAgain, setFetchAgain }) {
         display={"flex"}
         flexDirection={"column"}
         p={3}
-        backgroundImage={`url(${image})`}
+        backgroundImage={`url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZw4UBwqgBS5n9Gu0ZAgehgkdp5cH4YFHczA&s")`}
         backgroundRepeat="no-repeat"
         backgroundSize="cover"
         backgroundPosition="center"
@@ -122,7 +122,7 @@ export default function MyChat({ fetchAgain, setFetchAgain }) {
                 bg={
                   selectedChat === chat
                     ? "linear-gradient(135deg, #38B2AC, #3182CE)"
-                    : "white"
+                    : "lightgrey"
                 }
                 color={selectedChat === chat ? "white" : "black"}
                 px={4}
@@ -141,20 +141,39 @@ export default function MyChat({ fetchAgain, setFetchAgain }) {
                   color: "white",
                 }}
               >
-                <Box display="flex" alignItems="center">
-                  <img
-                    src={getImage(loggedUser, chat.users)}
-                    style={{
-                      width: "40px",
-                      height: "40px",
-                      borderRadius: "50%",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <Text fontSize="lg" fontFamily="Inter, sans-serif">
-                    {getSender(loggedUser, chat.users)}
-                  </Text>
-                </Box>
+                {!chat.isGroupChat ? (
+                  <Box display="flex" alignItems="center">
+                    <img
+                      src={getImage(loggedUser, chat.users)}
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "50%",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <Text fontSize="lg" fontFamily="Inter, sans-serif">
+                      {getSender(loggedUser, chat.users)}
+                    </Text>
+                  </Box>
+                ) : (
+                  <>
+                    <Box display={"flex"} alignItems={"center"}>
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKrPigCzHhHOH8YJENq63nLwRKC2cWw77j3g&s"
+                        style={{
+                          width: "40px",
+                          height: "40px",
+                          borderRadius: "50%",
+                          marginRight: "10px",
+                        }}
+                      />
+                      <Text fontSize="lg" fontFamily="Inter, sans-serif">
+                        {chat.chatName}
+                      </Text>
+                    </Box>
+                  </>
+                )}
               </Box>
             ))}
           </Stack>

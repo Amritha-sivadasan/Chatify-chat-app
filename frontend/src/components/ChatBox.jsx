@@ -15,7 +15,7 @@ export default function ChatBox({ fetchAgain, setFetchAgain }) {
       borderRadius={"lg"}
       borderWidth={"1px"}
       bg={"white"}
-      backgroundImage={image}
+      backgroundImage={`url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQicJ_-q9bHjdZlnCJclsmGRYOve38XT7cISg&s')`}
       bgSize="cover"
       bgPosition="center"
       bgRepeat="no-repeat"

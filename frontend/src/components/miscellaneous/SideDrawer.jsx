@@ -101,11 +101,13 @@ export default function SideDrawer() {
       };
       const { data } = await axios.post("/api/chat", { userId }, config);
 
-      if (chats.find((c) => c._id == data._id)) {
+      if (!chats.find((c) => c._id == data._id)) {
         setChats([data, ...chats]);
       }
       setSelectChat(data);
       setLoadingChat(false);
+      setSearch("");
+      setSearchReslut(null);
       onClose();
     } catch (error) {
       toast({
@@ -125,7 +127,7 @@ export default function SideDrawer() {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
-        backgroundImage="url('https://cdn.pixabay.com/photo/2015/06/20/07/24/color-815552_640.png')"
+        backgroundColor={"rgb(2,30,70)"}
         w="100%"
         p="5px 10px"
         borderWidth="5px"
@@ -139,11 +141,13 @@ export default function SideDrawer() {
             display="flex"
             alignItems="center"
             onClick={onOpen}
+            style={{ color: "white" }}
+            _hover={{ color: "black" }}
           >
             <SearchIcon />
-            <Text display={{ base: "none", md: "flex" }} px="4">
+            {/* <Text display={{ base: "none", md: "flex" }} px="4">
               Search User
-            </Text>
+            </Text> */}
           </Button>
         </Tooltip>
         <Text fontSize="2xl" fontFamily="Roboto Slab, serif" color={"white"}>
@@ -156,8 +160,9 @@ export default function SideDrawer() {
                 count={notification.length}
                 effect={Effect.SCALE}
               />
-              <BellIcon fontSize={"2xl"} m={1} />
+              <BellIcon fontSize={"2xl"} m={1} color={"white"} />
             </MenuButton>
+
             <MenuList>
               {!notification.length && "No new Messages"}
               {notification.map((notif) => (
@@ -180,6 +185,8 @@ export default function SideDrawer() {
               as={Button}
               rightIcon={<ChevronDownIcon />}
               _hover={{ border: "none" }}
+              bg={"white"}
+              marginLeft={"10px"}
             >
               <Avatar
                 size={"sm"}
@@ -203,7 +210,7 @@ export default function SideDrawer() {
       <Drawer placement={placement} onClose={onClose} isOpen={isOpen}>
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Basic Drawer</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">Find your mate</DrawerHeader>
           <DrawerBody>
             <Box display={"flex"} paddingBottom={2}>
               <Input
