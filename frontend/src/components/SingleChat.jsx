@@ -37,7 +37,7 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
   const [typing, setTyping] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const toast = useToast();
-
+  console.log("selected chat ", selectedChat);
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -227,12 +227,16 @@ export default function SingleChat({ fetchAgain, setFetchAgain }) {
             flexDir={"column"}
             justifyContent={"flex-end"}
             padding={3}
-            backgroundImage={`url("https://t3.ftcdn.net/jpg/03/27/51/56/360_F_327515607_Hcps04aaEc7Ki43d1XZPxwcv0ZaIaorh.jpg")`}
+            bg="#F0F4F8"
+            backgroundImage={`url("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRiJE6ippGZg24ZWDZ-dyna0sgBd7wxjY6pEw&s")`}
             w={"100%"}
             height={"100%"}
             borderRadius={"lg"}
             overflowY={"hidden"}
             position="relative"
+            bgSize="cover"
+            bgPosition="center"
+            bgRepeat="no-repeat"
           >
             {loading ? (
               <Spinner

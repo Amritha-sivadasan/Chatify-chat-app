@@ -7,6 +7,8 @@ import {
   InputRightElement,
   Button,
   useToast,
+  Image,
+  Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import axios from "axios";
@@ -20,6 +22,7 @@ export default function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState();
   const [picture, setPicture] = useState();
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const toast = useToast();
   const Navigate = useNavigate();
 
@@ -49,6 +52,7 @@ export default function SignUp() {
           console.log(res.data);
           setPicture(res.data.url.toString());
           setLoading(false);
+          setSelectedImage(pics);
         })
         .catch((err) => {
           setLoading(false);
@@ -97,7 +101,7 @@ export default function SignUp() {
         },
       };
       axios
-        .post("/api/user", { name, email, password, picture },config)
+        .post("/api/user", { name, email, password, picture }, config)
         .then((res) => {
           toast({
             title: "Account created.",
@@ -172,13 +176,32 @@ export default function SignUp() {
 
       <FormControl id="picture" isRequired>
         <FormLabel>Upload Image</FormLabel>
-        <Input
-          type="file"
-          p={1.5}
-          accept="image/*"
-          onChange={(e) => postDetails(e.target.files[0])}
-        />
+        <Flex align="center">
+          <Image
+            mt={2}
+            src={
+              selectedImage
+                ? URL.createObjectURL(selectedImage)
+                : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJQAAACUCAMAAABC4vDmAAAAZlBMVEX///8AAAC6urq2trYHBwf6+vqioqJWVlZPT0/r6+vo6Ojy8vL39/dCQkLl5eXv7+/Jycmurq5bW1uUlJR/f38gICA0NDRgYGAUFBScnJyFhYVISEg6OjrDw8NwcHBra2vZ2dkpKSm+K3BfAAADOUlEQVR4nO2b6cKqIBBA1dK+XLHcrS99/5e85VK5RAwN2r13zt8CjoDI4KhpBEEQBEEQBEEQBEH8pdjM2CBjMPsToyD34myrI7PNYi8PJJUcC1vn2cxypLrpoNDpykGis/yTWiddP4GnVrBT7XTtK+gIHtU76foR5mR3xRLLBV6NAE6edNXDplXUFkp9fKUbfncTFZBCbtmUqWVXk7cEcdNAaQLKnNsyZ1VOmmY0DcQMUCRsimwh1wHEbccvBBSx4J0LxPSaJixAkVZqp1Lqh6TEIClRSEqU/0bKND8URpdyWRj9RiH7ZFeDLcXSrPk5SyGPU6VS5vOeNP8SqeE+WdoKVeqsD5EdQUypSTCYSsWUuFJMHyPZVZhS+UQKUq0aKTOdSF3kVlFMqWncfFhf6ht7aiaal1ypMKXGy5RIbGj6VTWJajGl7J+R027PrchlUXmq6zrxdvngCAB1Rd+MpAxeNdVwtD3jcQW4z75o0E7EqcQt6vFY7+7XgCvlPlsVnC0V8ybz73YVrgqp6wj2rZW8sQvnlK5cHCVSmm9EXuIVZ97h1XjuPUjVSAlXMM9+JSnuCfxKUvy3AqtImW9OlleRenfavYbUdB+4lJRj+/5+NgKLeD4qpZh18eq6jMJq/ItbvHVSI+WncV9/Ugz/IuKkRGp4vyfP0Yx7EXDqpNo9LPzIWiBC1vX4sctz3s+nu1T7bIwrFKnp/X63cn6FnDqpZqRBrzReBg5zc2a7aVsRfZPa7/SCCqL0WurFPDYA/fSQgjIv9fLeyvKgEn/jjCrlCvfFclICa/XiUgFSP2FKOULr4rJS4vfWclI+ZjYHklQwDtYxpHzrGII2bEOp/fQA6HMp//ZCnxdg86Wq2VD3U6l2IeYeRXCkTGQnlP2UzWuApEiKpEiKpEjqH5TSsKU0DCnkPNQcRcq0El4jMJJutykt9WWJgl1KpYIU3R6JlMou+RSyWQUikXyqPE3XlkjT7c98Dt+U0PxI/c4l00Z4yKZ+L5MkD31T7yj+7OIG+HMCzf7CDy8W+ERFahV0rEydUhbK3kGOVcbZFp0sLuW+L+oJ2NlA5syUrckEQRAEQRAEQRAEQajmD7O2OEfBd151AAAAAElFTkSuQmCC"
+            }
+            alt="Uploaded Image"
+            boxSize="200px"
+            objectFit="cover"
+            borderRadius="md"
+            cursor="pointer" // Added cursor pointer to indicate it's clickable
+            onClick={() => document.getElementById("uploadInput").click()} // Click event to trigger file input click
+          />
+          <Input
+            id="uploadInput" // Added id for the file input
+            type="file"
+            p={1.5}
+            accept="image/*"
+            style={{ display: "none" }} // Hide the file input visually
+            onChange={(e) => postDetails(e.target.files[0])}
+          />
+        </Flex>
       </FormControl>
+
       <Button
         colorScheme="blue"
         width={"100%"}

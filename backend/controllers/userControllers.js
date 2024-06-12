@@ -50,6 +50,8 @@ const authUser = expressAsyncHandler(async (req, res) => {
       picture: exitUser.picture,
       token: getnerateTocken(exitUser._id),
     });
+  }else{
+    res.json({exitUser})
   }
 });
 

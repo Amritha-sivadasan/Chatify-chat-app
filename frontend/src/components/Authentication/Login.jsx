@@ -21,15 +21,6 @@ export default function Login() {
   const toast = useToast();
   const Navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  //   console.log("userInfo", userInfo);
-  //   if (userInfo) {
-  //     setUser(userInfo);
-  //     Navigate("/chat");
-  //   }
-  // }, []);
-
   const handleClick = () => {
     setShow(!show);
   };
@@ -45,6 +36,7 @@ export default function Login() {
         isClosable: true,
       });
       setLoading(false);
+
       return;
     }
 
@@ -60,6 +52,19 @@ export default function Login() {
         config
       );
 
+      if (res.data.exitUser === null) {
+        toast({
+          title: "User not found",
+          description: "You need to register",
+          status: "warning",
+          duration: 2000,
+          isClosable: true,
+          colorScheme: "red",
+          position: "top",
+        });
+        setLoading(false);
+        return;
+      }
       toast({
         title: "Account created.",
         description: "We've created your account for you.",

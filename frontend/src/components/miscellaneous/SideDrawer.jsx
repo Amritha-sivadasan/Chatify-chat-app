@@ -104,6 +104,7 @@ export default function SideDrawer() {
       if (!chats.find((c) => c._id == data._id)) {
         setChats([data, ...chats]);
       }
+      console.log('data from side drawer',data);
       setSelectChat(data);
       setLoadingChat(false);
       setSearch("");

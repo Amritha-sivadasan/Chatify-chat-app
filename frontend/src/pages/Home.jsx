@@ -35,7 +35,14 @@ export default function Home() {
         borderRadius="lg"
         borderWidth="1px"
       >
-        <Text fontSize="larger">Chatify</Text>
+        <Text fontSize="larger" fontWeight={"bold"}   sx={{
+          background: "linear-gradient(90deg, #38B2AC, #3182CE)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          display: "inline-block"
+        }}>
+          Chatify
+        </Text>
       </Box>
       <Box
         display="flex"

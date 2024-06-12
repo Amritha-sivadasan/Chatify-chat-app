@@ -15,17 +15,17 @@ const app = express();
 app.use(express.json());
 
 //---------------Diployment--------------//
-const ___dirname1 = path.resolve();
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(___dirname1, "/frontend/dist")));
-  app.get("*", (req, res) => {
-    res.sendFile();
-  });
-} else {
-  app.get("/", (req, res) => {
-    res.send("Api is running");
-  });
-}
+// const ___dirname1 = path.resolve();
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(___dirname1, "/frontend/dist")));
+//   app.get("*", (req, res) => {
+//     res.sendFile(path.resolve(___dirname1, "frontend", "dist", "index.html"));
+//   });
+// } else {
+//   app.get("/", (req, res) => {
+//     res.send("Api is running");
+//   });
+// }
 //---------------Diployment--------------//
 
 app.use("/api/user", userRouter);

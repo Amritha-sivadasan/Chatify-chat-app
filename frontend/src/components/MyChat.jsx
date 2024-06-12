@@ -6,7 +6,7 @@ import axios from "axios";
 import ChatLoading from "./ChatLoading";
 import { getImage, getSender } from "../config/chatLogics";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
-import image from "../images/bg.jpg";
+
 import { motion } from "framer-motion";
 
 export default function MyChat({ fetchAgain, setFetchAgain }) {
