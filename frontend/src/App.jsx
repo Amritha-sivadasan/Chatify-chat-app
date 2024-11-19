@@ -11,7 +11,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/chat" element={<Chat />} />
           </Routes>
-      
+       <p>kjfksjfkfse</p> 
      
     </div>
   );
